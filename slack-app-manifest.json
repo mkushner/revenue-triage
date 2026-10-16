@@ -1,0 +1,39 @@
+{
+  "_metadata": {
+    "major_version": 2,
+    "minor_version": 1
+  },
+  "display_information": {
+    "name": "revenue-triage",
+    "description": "Stripe dunning triage"
+  },
+  "features": {
+    "bot_user": {
+      "display_name": "revenue-triage",
+      "always_online": false
+    },
+    "slash_commands": [
+      {
+        "command": "/digest",
+        "description": "Dunning digest for the last 7 days",
+        "url": "https://YOUR-APP-URL/slack",
+        "should_escape": false
+      }
+    ]
+  },
+  "oauth_config": {
+    "scopes": {
+      "bot": [
+        "commands",
+        "chat:write",
+        "channels:history",
+        "groups:history"
+      ]
+    }
+  },
+  "settings": {
+    "org_deploy_enabled": false,
+    "socket_mode_enabled": false,
+    "token_rotation_enabled": false
+  }
+}

@@ -1,0 +1,43 @@
+# Copy to config.yml, or put the whole file into $TRIAGE_CONFIG. ${VAR} is expanded from the environment.
+
+# Slack channel ids; /invite @revenue-triage to each.
+channels:
+  billing: C0000000000
+  big: C0000000001
+
+# Pings fire on the transition into a routed state. min_amount is in major currency units.
+routes:
+  - states: [needs_you, dead]
+    channels: [billing]
+  - states: [watch, needs_you, dead]
+    min_amount: 500
+    channels: [big]
+
+# Soft declines (codes not listed below) move wait -> watch at this attempt.
+watch_from_attempt: 4
+
+# charge.outcome.reason -> state. A starting point: tune it on which codes self-recover for you.
+decline_codes:
+  dead: [lost_card, stolen_card, pickup_card]
+  hard:
+    - expired_card
+    - do_not_honor
+    - card_velocity_exceeded
+    - incorrect_cvc
+    - incorrect_number
+    - card_not_supported
+    - currency_not_supported
+    - invalid_account
+    - highest_risk_level                 # Radar block
+    - previously_declined_do_not_retry   # Stripe's own "won't retry" after a hard decline
+
+# Churn risk by attempt count; first match from the top wins.
+risk_levels:
+  - { min: 7, label: HIGH }
+  - { min: 4, label: MEDIUM }
+  - { min: 1, label: LOW }
+
+# Flag by amount due.
+amount_levels:
+  - { min: 500, emoji: ":triangular_flag_on_post:" }
+  - { min: 100, emoji: ":warning:" }
